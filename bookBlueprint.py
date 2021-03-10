@@ -1,9 +1,12 @@
 
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
 
-book= Blueprint("book",__name__)
+from bookSchema import db, book, book_schema, books_schema
 
-@book.route('/book', methods=['POST'])
+
+book_bp = Blueprint("book_bp",__name__)
+
+@book_bp.route('/book', methods=['POST'])
 def add_book():
   name = request.json['name']
   description = request.json['description']
@@ -18,20 +21,20 @@ def add_book():
   return book_schema.jsonify(new_book)
 
 
-@book.route('/book', methods=['GET'])
+@book_bp.route('/book', methods=['GET'])
 def get_books():
   all_books = book.query.all()
   result = books_schema.dump(all_books)
   return jsonify(result)
 
 
-@book.route('/book/<id>', methods=['GET'])
+@book_bp.route('/book/<id>', methods=['GET'])
 def get_book(id):
   book = book.query.get(id)
   return book_schema.jsonify(book)
 
 
-@book.route('/book/<id>', methods=['PUT'])
+@book_bp.route('/book/<id>', methods=['PUT'])
 def update_book(id):
   book = book.query.get(id)
 
@@ -49,7 +52,7 @@ def update_book(id):
 
   return book_schema.jsonify(book)
 
-@book.route('/book/<id>', methods=['DELETE'])
+@book_bp.route('/book/<id>', methods=['DELETE'])
 def delete_book(id):
   book = book.query.get(id)
   db.session.delete(book)

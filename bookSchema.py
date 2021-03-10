@@ -1,9 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root:@localhost/flask_crud"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
+db = SQLAlchemy()
+ma = Marshmallow()
 
 class book(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -22,3 +21,6 @@ class book(db.Model):
 class bookSchema(ma.Schema):
   class Meta:
     fields = ('id', 'name', 'description', 'price', 'author')
+
+book_schema = bookSchema()
+books_schema = bookSchema(many=True)

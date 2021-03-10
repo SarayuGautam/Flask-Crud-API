@@ -1,24 +1,20 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
-import os
 
+import os
+from bookSchema import db, ma
 
 app = Flask(__name__)
-
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root:@localhost/flask_crud"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+db.init_app(app)
 
-ma = Marshmallow(app)
+ma.init_app(app)
 
+from bookBlueprint import book_bp
 
-book_schema = bookSchema()
-books_schema = bookSchema(many=True)
-
-
+app.register_blueprint(book_bp, url_prefix="")
 
 if __name__ == '__main__':
   app.run(debug=True)
